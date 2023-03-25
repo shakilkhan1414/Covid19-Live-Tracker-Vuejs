@@ -1,0 +1,16 @@
+body{
+  background-color: #212529;
+}
+p.card-text{
+  margin-bottom: 5px;
+}
+select {
+  box-shadow: unset !important;
+}
+a{
+  color: #dc3545;
+  text-decoration: none;
+}
+a:hover{
+  color: #dc3545;
+}
