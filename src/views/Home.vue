@@ -7,12 +7,11 @@
 <template>
 
 <div class="container text-light text-center">
-    <button v-if="!stats.TotalConfirmed" @click="clearCountryData" class="btn btn-primary mt-3">Reload API</button>
     <main v-if='!loading'>
         <DateTitle :title="title" :date="dataDate" />
         <DataBoxes :stats="stats" />
         <CountrySelect :countries="countries" @getCountry="getCountryData" />
-        <button v-if="stats.Country" @click="clearCountryData" class="btn btn-primary">Back to Global</button>
+        <button v-if="stats.country" @click="clearCountryData" class="btn btn-primary">Back to Global</button>
     </main>
     <main v-else class="d-flex justify-content-center align-items-center p-3">
         <img src="../assets/loading.gif">
@@ -35,29 +34,53 @@ export default {
     },
     methods:{
         async fetchCovidData(){
-            const res= await fetch("https://api.covid19api.com/summary")
-            const data= await res.json()
+            const res= await axios.get('https://api.collectapi.com/corona/totalData',{
+                headers:{
+                    authorization: "apikey 6940yHXrgCRlrI1ijLjpBV:16gOVh4EjkpbOkeoAmyzOy"
+                }
+            });
+            const data= await res.data.result
+            return data
+            
+        },
+        async fetchCovidDataByCountry(){
+            const res= await axios.get('https://api.collectapi.com/corona/countriesData',{
+                headers:{
+                    authorization: "apikey 6940yHXrgCRlrI1ijLjpBV:16gOVh4EjkpbOkeoAmyzOy"
+                }
+            })
+            const data= await res.data.result
             return data
         },
         getCountryData(country){
             this.stats=country
-            this.title=country.Country
+            this.title=country.country
+        },
+        getDate(){
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayDate = `${day}-${month}-${year}`;
+            return todayDate;
         },
         async clearCountryData(){
             this.loading=true
             this.stats={}
             const data= await this.fetchCovidData()
-            this.stats=data.Global
+            this.stats=data
             this.title='Global'
-            this.countries=data.Countries
+            const countryData= await this.fetchCovidDataByCountry()
+            this.countries=countryData
             this.loading=false
         }
     },
     async created(){
         const covidData= await this.fetchCovidData()
-        this.dataDate=covidData.Date
-        this.stats=covidData.Global
-        this.countries=covidData.Countries
+        const covidDataCountry= await this.fetchCovidDataByCountry()
+        this.dataDate=this.getDate()
+        this.stats=covidData
+        this.countries=covidDataCountry
         this.loading=false
     }
 }

@@ -3,8 +3,8 @@
         <div class="col-sm-6 mb-2">
             <select v-model="selectedCountry" @change="onChange" class="form-select form-select-lg">
                 <option value="0" selected>Select Country</option>
-                <option v-for="country in countries" :value="country.ID" :key="country.ID">
-                    {{country.Country}} ({{country.CountryCode}})
+                <option v-for="country in countries" :value="country.country" :key="country.country">
+                    {{country.country}}
                 </option>
             </select>
         </div>
@@ -15,13 +15,13 @@
 export default {
     data(){
         return{
-            selectedCountry: 0
+            selectedCountry: '0'
         }
     },
     props:['countries'],
     methods:{
         onChange(){
-            const country= this.countries.find((item)=> item.ID === this.selectedCountry )
+            const country= this.countries.find((item)=> item.country === this.selectedCountry )
             this.$emit('getCountry',country)
         }
     }
