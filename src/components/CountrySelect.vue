@@ -2,7 +2,7 @@
     <div class="row text-dark d-flex justify-content-center text-center my-3">
         <div class="col-sm-6 mb-2">
             <select v-model="selectedCountry" @change="onChange" class="form-select form-select-lg">
-                <option value="0" selected>Select Country</option>
+                <option value="0" selected>{{countries.length === 0 ? 'Loading countries ...' : 'Select Country'}}</option>
                 <option v-for="country in countries" :value="country.country" :key="country.country">
                     {{country.country}}
                 </option>

@@ -70,18 +70,19 @@ export default {
             const data= await this.fetchCovidData()
             this.stats=data
             this.title='Global'
+            this.loading=false
             const countryData= await this.fetchCovidDataByCountry()
             this.countries=countryData
-            this.loading=false
         }
     },
     async created(){
         const covidData= await this.fetchCovidData()
-        const covidDataCountry= await this.fetchCovidDataByCountry()
         this.dataDate=this.getDate()
         this.stats=covidData
-        this.countries=covidDataCountry
         this.loading=false
+        const covidDataCountry= await this.fetchCovidDataByCountry()
+        this.countries=covidDataCountry
+        
     }
 }
 
